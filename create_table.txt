@@ -1,0 +1,100 @@
+-- 用户弹幕设置
+create table user_barrage_option(
+	user_id    INT PRIMARY KEY not null,    -- 字体大小
+	font_size  TINYINT DEFAULT(15),  -- 字体大小
+	transparency TINYINT DEFAULT(3), -- 透明度
+	region     TINYINT DEFAULT(1),  -- 显示区域(region)
+	speed      TINYINT DEFAULT(5),-- 弹幕滚动速度(speed)
+	PRIMARY KEY (user_id)
+)engine=INNODB charset=utf8mb4;
+
+-- 视频集合
+create table video_collection(
+	video_collection_id INT not null,-- 集合名(collection_name)
+	user_id INT not null, -- 用户ID(user_id)
+	cover_path VARCHAR(30) not null,-- 封面路径(cross_path)
+ PRIMARY KEY (video_collection_id)
+)engine=INNODB charset=utf8mb4;
+
+
+
+-- 视频元数据
+create table video_meta(
+	video_id INT not null,-- 视频id
+	upload_user INT not null,-- 上传用户ID(upload_user)
+	video_collection_id INT not null,-- 从属集合(video_collection_id)
+	upload_time TIMESTAMP not null,-- 上传时间(upload_time)
+	video_duration TIMESTAMP not null,-- 视频时长(video_duration)
+	max_quality TINYINT not null DEFAULT(4),-- 最高画质(max_quality)
+	video_path varchar(30) not null,-- 视频存储路径(video_path)
+	cover_path varchar(30) not null,-- 封面存储路径(cover_path)
+	video_level TINYINT not null DEFAULT(1),-- 视频等级(video_level)<--推荐
+	video_suffix varchar(5) not null,-- 格式(video_suffix)
+ PRIMARY KEY (video_id)
+)engine=INNODB charset=utf8mb4;
+
+
+-- 视频附加数据
+create table video_data(
+	video_id INT not null,-- 视频id
+	comment_count SMALLINT not null,-- 评论数量(comment_count)
+	barrage_count SMALLINT not null,-- 弹幕数量(barrage_count)
+	like_count SMALLINT not null,-- 点赞数(like_count)
+	dislike_count SMALLINT not null,-- 点踩数(dislike_count)
+	collect_count SMALLINT not null,-- 收藏数(collect_count)
+	forward_count SMALLINT not null,-- 转发数(forward_count)
+	browse_count INT not null,-- 浏览数(browse_count)
+	PRIMARY KEY(video_id)
+)engine=INNODB charset=utf8mb4;
+
+
+
+-- 视频评论
+create table video_comment(
+	comment_id INT not null,-- 	评论ID comment_id
+	user_id INT not null,-- 	评论用户ID(user_id)
+	video_id INT not null,-- 	视频ID(video_id)
+	content varchar(300) not null,-- 	评论内容(content)
+	create_time TIMESTAMP not null,-- 	发表日期(create_time)
+	PRIMARY KEY(comment_id)
+)engine=INNODB charset=utf8mb4;
+
+
+-- 弹幕元数据
+create table barrage_meta(
+	barrage_id INT not null,-- 弹幕id
+	video_id INT not null,-- 	视频ID(video_id)
+	sender_id INT not null,-- 	发送者ID(sender_id)
+	create_time TIMESTAMP not null,-- 	创建时间(create_time)
+	content varchar(100) not null,-- 	弹幕内容(content)
+	PRIMARY KEY(barrage_id)
+)engine=INNODB charset=utf8mb4;
+
+-- 弹幕附加数据
+create table barrage_data(
+	barrage_id INT not null,-- 弹幕id
+	like_count SMALLINT not null,-- 点赞数(like_count)
+	report_count SMALLINT not null,-- 举报数(report_count)
+	PRIMARY KEY(barrage_id)
+)engine=INNODB charset=utf8mb4;
+
+
+
+-- 用户视频一对一关系
+create table user_video_state(
+	user_id INT not null,-- 用户ID(user_id)
+	video_id INT not null,-- 视频ID(video_id)
+	like_state BIT not null,-- 是否点过赞(like_state)
+	forware_state BIT not null,-- 是否转发过(forward_state)
+	collect_state BIT not null,-- 是否收藏过(collect_state)
+	PRIMARY KEY(user_id,video_id)
+)engine=INNODB charset=utf8mb4;
+
+-- 用户弹幕一对一关系
+create table user_barrage_state(
+	user_id INT not null,-- 用户ID(user_id)
+	barrage_id INT not null,-- 弹幕ID(barrage_id)
+	like_state INT not null,-- 是否点过赞(like_state)
+	PRIMARY KEY(user_id,barrage_id)
+)engine=INNODB charset=utf8mb4;
+
